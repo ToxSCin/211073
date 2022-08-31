@@ -13,7 +13,7 @@ namespace Projeto_Final
 {
     public partial class Form1 : Form
     {
-        double total,selecao;
+        double total;
         public Form1()
         {
             InitializeComponent();
@@ -25,18 +25,27 @@ namespace Projeto_Final
             dataGridView1.Columns.Insert(1, new DataGridViewTextBoxColumn());
             dataGridView1.Columns.Insert(2, new DataGridViewTextBoxColumn());
             dataGridView1.Columns.Insert(3, new DataGridViewTextBoxColumn());
+            dataGridView1.Columns.Insert(4, new DataGridViewTextBoxColumn());
+            dataGridView1.Columns.Insert(5, new DataGridViewTextBoxColumn());
+            dataGridView1.Columns.Insert(6, new DataGridViewTextBoxColumn());
+
 
 
             dataGridView1.Columns[0].Name = "Ok";
-            dataGridView1.Columns[1].Name = "Codigo";
-            dataGridView1.Columns[2].Name = "Descrição";
-            dataGridView1.Columns[3].Name = "Valor";
+            dataGridView1.Columns[1].Name = "ID";
+            dataGridView1.Columns[2].Name = "Codigo";
+            dataGridView1.Columns[3].Name = "Produto";
+            dataGridView1.Columns[4].Name = "Venda";
+            dataGridView1.Columns[5].Name = "Valor";
+            dataGridView1.Columns[6].Name = "Estoque";
+
 
             dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
             dataGridView1.ReadOnly = true;
             dataGridView1.AllowUserToAddRows = false;
             dataGridView1.AllowUserToDeleteRows = false;
             dataGridView1.AllowUserToDeleteRows = true;
+            
 
             dataGridView1.Columns[3].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             dataGridView1.Columns[3].DefaultCellStyle.Format = "###,###,##0.00";
@@ -55,14 +64,27 @@ namespace Projeto_Final
             while ((linha = arquivo.ReadLine()) != null)
             {
                 string[] dados = linha.Split(';');
-                string codigo = dados[0];
-                string descricao = dados[1];
-                double valor = double.Parse(dados[2]);
+                int id = int.Parse(dados[0]);
+                int codigo = int.Parse(dados[1]);
+                string produto = dados[2];
+                double valor = double.Parse(dados[3]);
+                double venda = double.Parse(dados[4]);
+                double Estoque = double.Parse(dados[5]);
 
-                dataGridView1.Rows.Add(false, codigo, descricao, valor);
+
+
+
+
                 total += valor;
+
+                if (venda <= valor)
+                {
+                    dataGridView1.Rows.Add(false, id, codigo, produto, valor, venda, Estoque);
+                    dataGridView1.Rows[id -1].DefaultCellStyle.BackColor = Color.Red;
+
+                }
+
             }
-            label2.Text = total.ToString("C");
         }
 
 
@@ -74,20 +96,18 @@ namespace Projeto_Final
                 if (Convert.ToBoolean(dataGridView1.CurrentRow.Cells[0].Value) == false)
                 {
                     dataGridView1.CurrentRow.Cells[0].Value = true;
-                    selecao += Convert.ToDouble(dataGridView1.CurrentRow.Cells[3].Value);
+                    
                 }
                 else
                 {
                     dataGridView1.CurrentRow.Cells[0].Value = false;
-                    selecao -= Convert.ToDouble(dataGridView1.CurrentRow.Cells[3].Value);
+                    
                 }
-                label4.Text = selecao.ToString("C");
             }
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
-            selecao = 0;
             foreach (DataGridViewRow linha in dataGridView1.Rows)
             
                 linha.Cells[0].Value = false;
@@ -99,8 +119,7 @@ namespace Projeto_Final
             {
                 if (Convert.ToBoolean(dataGridView1.Rows[i].Cells[0].Value) == true)
                 {
-                    selecao -= Convert.ToDouble(dataGridView1.Rows[i].Cells[3].Value);
-                    total -= Convert.ToDouble(dataGridView1.Rows[i].Cells[3].Value);
+                    
                     dataGridView1.Rows.Remove(dataGridView1.Rows[i]);
                 }
             }
@@ -111,17 +130,35 @@ namespace Projeto_Final
             Application.Exit();
         }
 
+        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
         private void button2_Click(object sender, EventArgs e)
         {
-            selecao = 0;
+             
             foreach (DataGridViewRow linha in dataGridView1.Rows)
             {
                 linha.Cells[0].Value = true;
-                selecao += Convert.ToDouble(linha.Cells[3].Value);
+                
             }
-            label2.Text = selecao.ToString("C");
+            
         }
 
+        private void listView2_SelectedIndexChanged(object sender, EventArgs e)
+        {
 
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
